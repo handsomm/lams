@@ -1,0 +1,126 @@
+{% extends 'user/main.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block title %} Home {% endblock title %}
+
+<!-- Message block -->
+{% block msg %}
+{% if messages %}
+{% for message in messages %}
+<script>
+    window.addEventListener('load', function () {
+        alert_toast('Success', '{{message}}', '{{message.tags}}');
+    })
+</script>
+{% endfor %}
+{% endif %}
+{% endblock msg %}
+<!-- End Message block -->
+
+<!-- Main content -->
+{% block content %}
+
+<!-- Top section -->
+{% if page_name %}
+<div>
+    <div class="content-header text-white" style="background-color: #5b5d62;">
+        <h2 class="p-1">{{page_name}}</h2>
+    </div>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{page_name}}</li>
+        </ol>
+    </nav>
+
+</div>
+{% endif %}
+<!-- End top section -->
+
+<!-- Main content -->
+
+<style>
+    .al-logo {
+        height: 3em;
+        width: 3em;
+        object-fit: scale-down;
+        object-position: center center;
+    }
+</style>
+<section class="py-4">
+    <div class="container">
+        <h3 class="fw-bolder text-center">List of Products</h3>
+        <center>
+            <hr class="bg-primary opacity-100" style="height:3px" width="5%">
+        </center>
+        <div class="card rounded-0 shadow">
+            <div class="card-body">
+                <div class="container-fluid">
+                    <table class="table table-bordered table-striped" id="product-tbl">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="15%">
+                            <col width="20%">
+                            <col width="30%">
+                            <col width="30%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">DateTime</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td class="text-center">{{ forloop.counter }}</td>
+                                <td>{{ product.date_added|date:"Y-m-d H:i" }}</td>
+                                <td>{{ product.name}}</td>
+                                <td>{{ product.description }}</td>
+                                <td class="text-center">
+                                    {% if product.status == '1' %}
+                                    <span
+                                        class="badge badge-success bg-gradient bg-success px-3 rounded-pill bg-opacity-75 text-sm py-1">Active</span>
+                                    {% else %}
+                                    <span
+                                        class="badge badge-secondary bg-gradient bg-secondary px-3 rounded-pill bg-opacity-75 text-sm py-1">Inactive</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- End Main content -->
+{% endblock content %}
+
+{% block ScriptBlock %}
+<script>
+    $(function () {
+        $('#product-tbl').find('td, th').addClass('px-2 py-1 align-middle')
+        $('#product-tbl').DataTable({
+            columnDefs: [{
+                orderable: false,
+                targets: [4]
+            }],
+            lengthMenu: [
+                [5, 10, 50, -1],
+                [5, 10, 50, "All"]
+            ]
+        })
+    })
+
+    
+</script>
+{% endblock ScriptBlock %}

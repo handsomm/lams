@@ -1,0 +1,43 @@
+{% extends 'laundry/base.html' %}
+{% load static %}
+
+{% block allcontent %}
+<div class="page-wrapper chiller-theme">
+
+
+    {% block msg %}
+    {% endblock msg %}
+
+    
+    {% if sidebar %}
+    <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+        <i class="fas fa-bars"></i>
+    </a>
+    {% include 'user/user_sidebar.html' %}
+    {% endif %}
+
+    <!-- sidebar-wrapper  -->
+    <main class="page-content">
+        <div class="container-fluid">
+
+            {% block content %}
+            <!-- Main content here -->
+            {% endblock content %}
+
+
+
+            {% if footer_view %}
+            {% include 'laundry/footer.html' %}
+            {% endif %}
+
+        </div>
+    </main>
+    <!-- page-content" -->
+</div>
+
+<!-- <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a> -->
+{% block ScriptBlock %}
+
+{% endblock ScriptBlock %}
+
+{% endblock allcontent %}

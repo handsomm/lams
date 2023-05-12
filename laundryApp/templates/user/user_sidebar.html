@@ -1,0 +1,109 @@
+{% load static %}
+<nav id="sidebar" class="sidebar-wrapper">
+
+    <div class="sidebar-content">
+        <div class="sidebar-brand">
+            <a href="{% url 'dashboard' %}">LSMS</a>
+            <div id="close-sidebar">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sidebar-header">
+            <div class="user-pic" style="background-color: cyan;">
+                <img class="img-responsive img-rounded" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="User picture">
+            </div>
+            <div class="user-info">
+                <span class="user-name">
+                    {% if request.user.is_authenticated %}
+                    <strong>{{request.user.get_short_name}}</strong>
+                    {% endif %}
+                </span>
+                <span class="user-role">{% if request.user.status %} {{request.user.status}} {% endif %}</span>
+                <span class="user-status">
+                    <i class="fa fa-circle" {% if request.user.is_active %} style="color: rgb(54, 245, 12);" {% else %} style="color: rgb(255, 20, 20);" {% endif %}></i>
+                    {% if request.user.is_active %}
+                    <span>Online</span>
+                    {% else %}
+                    <span>Offline</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        <!-- sidebar-header  -->
+        <div class="sidebar-search">
+            <div>
+                <div class="input-group">
+                    <input type="text" class="form-control search-menu" placeholder="Search...">
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- sidebar-search  -->
+        <div class="sidebar-menu">
+            <ul>
+                <li class="header-menu">
+                    <span>General</span>
+                </li>
+                <li class="">
+                    <a href="{% url 'dashboard' %}">
+                        <i class="fa fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <span class="badge badge-pill badge-warning">New</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{% url 'laundry-page' %}">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>Orders</span>
+                        <span class="badge badge-pill badge-danger">3</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{% url 'price-page' %}">
+                        <i class="far fa-gem"></i>
+                        <span>Laundry Category</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{% url 'product-page' %}">
+                        <i class="fa fa-chart-line"></i>
+                        <span>Product List</span>
+                    </a>
+                </li>
+
+                <li class="header-menu">
+                    <span>Extra</span>
+                </li>
+                <li>
+                    <a href="{% url 'profile' %}">
+                        <i class="fa fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- sidebar-menu  -->
+    </div>
+    <!-- sidebar-content  -->
+    <div class="sidebar-footer">
+        <a href="#">
+            <i class="fa fa-bell"></i>
+            <span class="badge badge-pill badge-warning notification">3</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-envelope"></i>
+            <span class="badge badge-pill badge-success notification">7</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-cog"></i>
+            <span class="badge-sonar"></span>
+        </a>
+        <a href="{% url 'logout_user' %}">
+            <i class="fa fa-power-off"></i>
+        </a>
+    </div>
+</nav>

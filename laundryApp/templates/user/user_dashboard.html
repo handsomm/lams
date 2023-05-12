@@ -1,0 +1,74 @@
+{% extends 'user/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} Home {% endblock title %}
+
+<!-- Message block -->
+{% block msg %}
+{% if messages %}
+{% for message in messages %}
+<script>
+    window.addEventListener('load', function () {
+        alert_toast('Success', '{{message}}', '{{message.tags}}');
+    })
+</script>
+{% endfor %}
+{% endif %}
+{% endblock msg %}
+<!-- End Message block -->
+
+<!-- Main content -->
+{% block content %}
+
+<!-- Top section -->
+{% if page_name %}
+<div>
+    <div class="content-header text-white" style="background-color: #5b5d62;">
+        <h2 class="p-1">{{page_name}}</h2>
+    </div>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{page_name}}</li>
+        </ol>
+    </nav>
+
+</div>
+{% endif %}
+<!-- End top section -->
+
+<!-- Main content -->
+<div class="m-5 shadow p-5 bg-white rounded">
+    <div class="row">
+        <div class="col-lg-12">
+            <h5>Welcome back {{request.user.get_full_name}} !!!</h5>
+            <hr>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-lg-3 alert alert-primary h5 mx-4">
+            <b>Orders</b>
+            <hr>
+            <p class="text-right"><b>{{laundries}}</b></p>
+        </div>
+        <div class="col-lg-3 alert alert-danger h5 mx-4">
+            <b>Laundry Categories</b>
+            <hr>
+            <p class="text-right"><b>{{prices|intcomma}}</b></p>
+        </div>
+        <div class="col-lg-3 alert alert-info h5 mx-4">
+            <b>Products</b>
+            <hr>
+            <p class="text-right"><b>{{products|intcomma}}</b></p>
+        </div>
+    </div>
+</div>
+
+<!-- End Main content -->
+
+
+{% endblock content %}
+
+<!-- End Main content -->

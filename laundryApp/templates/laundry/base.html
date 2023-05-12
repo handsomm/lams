@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="Responsive sidebar template with sliding effect and dropdown menu based on bootstrap 3">
+
+  {% if page_title %}
+  <title>{{ page_title }} | {{system_name}} </title>
+  {% else %}
+  <title>{{system_name}}</title>
+  {% endif %}
+
+
+  <link rel="shortcut icon" href="{% static 'assets/img/logo.jpg' %}" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+
+  <!-- Bootstrap 4.0.0 -->
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+  <link rel="stylesheet" href="{% static 'assets/DataTables/datatables.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/select2/dist/css/select2.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'assets/toast/jquery.toast.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/style.css' %}">
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>
+  <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+  <script src="{% static 'assets/bootstrap/js/popper.min.js' %}"></script>
+  <script src="{% static 'assets/DataTables/datatables.min.js' %}"></script>
+  <script src="{% static 'assets/select2/dist/js/select2.min.js' %}"></script>
+  <script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+
+  <script src="{% static 'assets/toast/jquery.toast.min.js' %}"></script>
+
+
+  <link rel="stylesheet" href="{% static 'assets/css/sidebar.css' %}">
+
+
+  <style>
+    body {
+      background-image:url("{% static 'assets/img/bg1.jpg' %}");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+
+    body.loading {
+      overflow: hidden;
+    }
+
+    #pre-loader {
+      display: flex;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      backdrop-filter: brightness(.5);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lds-facebook {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .lds-facebook div {
+      display: inline-block;
+      position: absolute;
+      left: 8px;
+      width: 16px;
+      background: #fff;
+      animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+    }
+
+    .lds-facebook div:nth-child(1) {
+      left: 8px;
+      animation-delay: -0.24s;
+    }
+
+    .lds-facebook div:nth-child(2) {
+      left: 32px;
+      animation-delay: -0.12s;
+    }
+
+    .lds-facebook div:nth-child(3) {
+      left: 56px;
+      animation-delay: 0;
+    }
+
+    @keyframes lds-facebook {
+      0% {
+        top: 8px;
+        height: 64px;
+      }
+
+      50%,
+      100% {
+        top: 24px;
+        height: 32px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  {% block allcontent %}
+
+  {% endblock allcontent %}
+
+  <div class="modal fade" id="uni_modal" role='dialog'>
+    <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content rounded-0">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn  btn-sm btn-flat btn-primary rounded-0" id='submit'
+            onclick="$('#uni_modal form').submit()">Save</button>
+          <button type="button" class="btn btn-sm btn-flat btn-light border rounded-0"
+            data-bs-dismiss="modal">Cancel</button>
+        </div>
+        <!-- <div class="modal-sub-footer">
+          <button type="button" class="btn btn-sm btn-flat btn-light border rounded-0"
+            data-bs-dismiss="modal">Close</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="confirm_modal" role='dialog'>
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-content rounded-0">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmation</h5>
+        </div>
+        <div class="modal-body">
+          <div id="delete_content"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-flat btn-primary rounded-0" id='confirm'
+            onclick="">Continue</button>
+          <button type="button" class="btn btn-sm btn-flat btn-light border rounded-0"
+            data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="viewer_modal" role='dialog'>
+    <div class="modal-dialog modal-fullscreen" role="document">
+      <div class="modal-content rounded-0 bg-transparent">
+        <div class="modal-body bg-transparent d-flex flex-column w-100 h-100 align-items-center justify-content-center">
+          <div class="text-end w-100 px-5">
+            <a class="text-decoration-none text-light" href="javascript:void(0)" data-bs-dismiss="modal"><i
+                class="fa fa-times fs-3"></i></a>
+          </div>
+          <div id="img-viewer" class="w-75 h-75 bg-dark overflow-auto">
+            <img src="" class="image-thumbnail" id="img-viewer-field" />
+          </div>
+          <div class="w-25 d-flex justify-content-center pt-3">
+            <div class="input-group mb-3">
+              <button class="btn btn-dark bg-gradient btn-sm text-light" type="button" id="zoom-minus"><i
+                  class="fa fa-minus"></i></button>
+              <input type="text" id="zoom-value"
+                class="form-control form-control-sm rounded-0 w-25 bg-dark bg-gradient border-dark text-light text-center"
+                value="100" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1"
+                readonly>
+              <button class="btn btn-dark bg-gradient btn-sm text-light" type="button" id="zoom-plus"><i
+                  class="fa fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- page-wrapper -->
+
+</body>
+
+
+
+<script>
+
+  // Loader
+  const loader = $('<div>')
+  loader.attr('id', 'pre-loader')
+  loader.html('<div class="lds-facebook"><div></div><div></div><div></div></div>')
+
+  window.start_loader = function () {
+    $('body').removeClass('loading')
+    if ($('#pre-loader').length > 0)
+      $('#pre-loader').remove();
+    $('body').append(loader)
+    $('body').addClass('loading')
+  }
+  window.end_loader = function () {
+    if ($('#pre-loader').length > 0)
+      $('#pre-loader').remove();
+    $('body').removeClass('loading')
+  }
+  // End Loader
+
+  // Uni Modal
+  window.uni_modal = function ($title = '', $url = '', $size = "") {
+    console.log($url)
+    start_loader()
+    $.ajax({
+      url: $url,
+      error: err => {
+        console.log()
+        alert("An error occured")
+      },
+      success: function (resp) {
+        if (resp) {
+          $('#uni_modal .modal-title').html($title)
+          $('#uni_modal .modal-body').html(resp)
+          if ($size != '') {
+            $('#uni_modal .modal-dialog').addClass($size + '  modal-dialog-centered')
+          } else {
+            $('#uni_modal .modal-dialog').removeAttr("class").addClass("modal-dialog modal-md modal-dialog-centered")
+          }
+          $('#uni_modal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            focus: true
+          })
+          $('#uni_modal').modal('show')
+          end_loader()
+        }
+      }
+    })
+  }
+  window._conf = function ($msg = '', $func = '', $params = []) {
+    $('#confirm_modal #confirm').attr('onclick', $func + "(" + $params.join(',') + ")")
+    // console.log("(" + $params.join(',') + ")")
+    $('#confirm_modal .modal-body').html($msg)
+    $('#confirm_modal').modal('show')
+  }
+  // End Uni Modal
+
+
+  // Sidebar
+  jQuery(function ($) {
+    $(".sidebar-dropdown > a").click(function () {
+      $(".sidebar-submenu").slideUp(200);
+      if (
+        $(this)
+          .parent()
+          .hasClass("active")
+      ) {
+        $(".sidebar-dropdown").removeClass("active");
+        $(this)
+          .parent()
+          .removeClass("active");
+      } else {
+        $(".sidebar-dropdown").removeClass("active");
+        $(this)
+          .next(".sidebar-submenu")
+          .slideDown(200);
+        $(this)
+          .parent()
+          .addClass("active");
+      }
+    });
+
+    $("#close-sidebar").click(function () {
+      $(".page-wrapper").removeClass("toggled");
+    });
+    $("#show-sidebar").click(function () {
+      $(".page-wrapper").addClass("toggled");
+    });
+  });
+
+  // End sidebar
+
+  // Toast
+  window.alert_toast = function (heading, text, icon) {
+    $.toast({
+      text: text, // Text that is to be shown in the toast
+      heading: heading, // Optional heading to be shown on the toast
+      icon: icon, // Type of toast icon
+      showHideTransition: 'slide', // fade, slide or plain
+      allowToastClose: true, // Boolean value true or false
+      hideAfter: 3000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+      stack: 5, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+      position: 'top-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+      textAlign: 'left',  // Text alignment i.e. left, right or center
+      loader: true,  // Whether to show loader or not. True by default
+      loaderBg: '#9EC600',  // Background color of the toast loader
+      beforeShow: function () { }, // will be triggered before the toast is shown
+      afterShown: function () { }, // will be triggered after the toat has been shown
+      beforeHide: function () { }, // will be triggered before the toast gets hidden
+      afterHidden: function () { }  // will be triggered after the toast has been hidden
+    });
+  }
+
+  // End Toast
+
+
+</script>
+
+
+</html>

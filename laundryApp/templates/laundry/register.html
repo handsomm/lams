@@ -1,0 +1,173 @@
+{% extends 'laundry/main.html' %}
+{% load static %}
+
+{% block title %} Home {% endblock title %}
+
+
+
+{% block content %}
+<!-- Top section -->
+{% if page_name %}
+<div>
+    <div class="content-header text-white" style="background-color: #5b5d62;">
+        <h2 class="p-1">{{page_name}}</h2>
+    </div>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{page_name}}</li>
+        </ol>
+    </nav>
+
+</div>
+{% endif %}
+<!-- End top section -->
+
+<style>
+    body {
+        width: 100%;
+        height: 100vh;
+        /* background: #007bff; */
+    }
+
+    main#main {
+        width: 100%;
+        height: 100vh;
+    }
+
+    #login-right {
+        position: absolute;
+        right: 0;
+        width: 40%;
+        height: 100%;
+        background: white;
+        display: flex;
+        align-items: center;
+    }
+
+    #login-left {
+        position: absolute;
+        left: 0;
+        width: 60%;
+        height: 100%;
+        background: #59b6ec61;
+        display: flex;
+        align-items: center;
+    }
+
+    #login-right .card {
+        margin: auto
+    }
+
+    .logo {
+        margin: auto;
+        font-size: 8rem;
+        background: white;
+        padding: .5em 0.7em;
+        border-radius: 50% 50%;
+        color: #000000b3;
+    }
+
+    .laundry-logo {
+        width: 1em;
+        height: 1.3em;
+        padding: unset;
+        margin: unset;
+    }
+
+    .laundry-logo::before {
+        content: url("{% static 'assets/img/laundry.svg' %}");
+    }
+</style>
+
+
+
+<main id="main" class="">
+    <div id="login-left">
+        <div class="logo">
+            <div class="laundry-logo"></div>
+        </div>
+    </div>
+    <div id="login-right">
+        <div class="card col-md-8">
+            <div class="card-body">
+                <h4 class="text-center">Register</h4>
+
+                <form id="register-user" action="" method="POST">
+                    {% csrf_token %}
+                    {% for fm in form %}
+                    <div class="mb-3">
+                        <label for="" class="form-label">{{fm.label}}</label>
+                        {{fm}}
+                        <small class="text-warning">{{fm.errors|striptags}}</small>
+                    </div>
+                    {% endfor %}
+                    <div class="form-group mb-3">
+                        <div class="d-flex w-100 align-items-center">
+                            <button class="btn btn-sm rounded btn-primary" type="submit">
+                                Register
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <p>Don't have an account <b><a class="text-danger" href="{% url 'login' %}">Login</a></b></p>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- End Main content -->
+
+{% endblock content %}
+
+{% block ScriptBlock %}
+
+<script>
+    $(function () {
+        $('#register-user').submit(function (e) {
+            e.preventDefault();
+            $('#register-user button[type="submit"]').attr('disabled', true).html('Registring...');
+            var _this = $(this)
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                headers: {
+                    'X-CSRFToken': "{{csrf_token}}"
+                },
+                url: "{% url 'register_user' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    $('#register-user button[type="submit"]').removeAttr('disabled').html('Register');
+                    end_loader();
+                    alert_toast('Error', 'An error occured', 'error')
+                },
+                success: function (resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        location.href = "{% url 'login' %}"
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        end_loader();
+                        $('#register-user button[type="submit"]').removeAttr('disabled').html('Register');
+                        alert_toast('Error', resp.msg, 'error')
+                    } else {
+                        end_loader();
+                        $('#register-user button[type="submit"]').removeAttr('disabled').html('Register');
+                        alert_toast('Error', 'An error occured', 'error')
+                    }
+                }
+            })
+        })
+    })
+</script>
+
+{% endblock ScriptBlock %}
